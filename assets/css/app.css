@@ -1,0 +1,74 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url('https://fonts.cdnfonts.com/css/greek');
+
+
+/* This file is for your main application CSS */
+@font-face {
+    font-family: "WorkSans";
+    src: url("https://fonts.cdnfonts.com/css/greek");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "WorkSans";
+    src: url("https://fonts.cdnfonts.com/css/greek");
+    font-weight: bold;
+    font-style: normal;
+}
+
+.em_gradient{
+    background-image: linear-gradient(to top, #e7e5e5, #c8c7c7, #6e6e6e, #4a4646);
+    height: 225px;
+}
+
+.round-image-padding{
+    border-radius: 50%;
+    border: 1.5px solid #FFFFFF;
+    padding: 4px;;
+}
+
+.img-down-arrow::after{
+    content: "";
+    position: absolute;
+    right:-10px;
+    top: 45%;
+    transform: translate(-50%);
+    border-width: 3px 3px 0 3px;
+    border-color: white transparent transparent transparent;
+    border-style: solid;
+}
+
+.dropdown-menu-arrow::before{
+    content: "";
+    position: absolute;
+    top: -5px;
+
+    left: calc(95% - 12px);
+    transform: translate(-50%);
+    border-width: 0 5px 5px 5px;
+    border-color:  transparent transparent white transparent;
+    border-style: solid;
+}
+
+.menu-item{
+    @apply block px-4 py-2 text-sm text-white font-brand font-regular
+}
+
+.menu-item:hover{
+    @apply hover:text-emDark-light
+}
+
+.pager-button{
+    @apply flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 
+}
+
+.pager-button:hover{
+    @apply hover:bg-gray-100 hover:text-gray-700  dark:hover:text-white  dark:hover:bg-gray-700
+} 
+
+.pager-button-selected{
+    @apply flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white 
+}

@@ -1,0 +1,163 @@
+<header class="flex justify-between items-center px-6 py-3 bg-emDark">
+  <div class="flex relative items-center">
+    <a href={~p"/"}>
+      <svg
+        alt="logo"
+        class="w-6 h-8 text-gray-800 dark:text-white "
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 18 20"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 4H1m3 4H1m3 4H1m3 4H1m6.071.286a3.429 3.429 0 1 1 6.858 0M4 1h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Zm9 6.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
+        />
+      </svg>
+    </a>
+    <a href={~p"/"} class="mr-6">
+      <div class="text-white font-brand font-bold text-3xl ml-2">Accountant</div>
+    </a>
+    <div>
+      <input
+        type="text"
+        class="rounded-lg
+      focus:outline-none focus:border-emLavender focus:ring-0 px-3 py-1
+      bg-emDark-dark placeholder-emDark-light text-white
+      font-brand font-regular text-sm mr-5 border-white"
+        placeholder="Search..."
+      />
+      <a
+        href={~p"/income"}
+        class="mt-2 mr-2 text-white text-[1rem] font-brand font-bold hover:text-emDark-light"
+      >
+        Έσοδα
+      </a>
+      <button class="mt-2 mr-2 text-white text-[1rem] font-brand font-bold hover:text-emDark-light">
+        Έξοδα
+      </button>
+    </div>
+  </div>
+  <div class="relative">
+    <button
+      class="img-down-arrow"
+      type="button"
+      id="user-menu-button"
+      phx-click={AccountantWeb.Layouts.App.toggle_dropdown_menu()}
+    >
+      <svg
+        class="round-image-padding  h-8 w-8"
+        aria-hidden="true"
+        alt="Profile Image"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 14 18"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M7 8a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-2 3h4a4 4 0 0 1 4 4v2H1v-2a4 4 0 0 1 4-4Z"
+        />
+      </svg>
+    </button>
+    <div
+      id="dropdown-menu"
+      phx-click-away={AccountantWeb.Layouts.App.toggle_dropdown_menu()}
+      class="dropdown-menu-arrow absolute right-0 mt-2 py-2 w-48 bg-emDark rounded-lg shadow-xl border border-white"
+      hidden="true"
+    >
+      <%= if @current_user do %>
+        <.link
+          href={~p"/users/settings"}
+          class="menu-item border-b border-white border-opacity-50"
+          role="menuItem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-0"
+        >
+          Signed in as <%= @current_user.email %>
+        </.link>
+        <.link
+          href="#"
+          class="menu-item "
+          role="menuItem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-1"
+        >
+          Your gists
+        </.link>
+        <.link
+          href="#"
+          class="menu-item border-b border-white border-opacity-50"
+          role="menuItem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-2"
+        >
+          Saved gists
+        </.link>
+        <.link
+          href={~p"/users/log_out"}
+          class="menu-item"
+          role="menuItem"
+          tabindex="-1"
+          method="delete"
+          id="user-menu-item-3"
+        >
+          Signed out
+        </.link>
+      <% else %>
+        <.link
+          href={~p"/users/log_in"}
+          class="menu-item border-b border-white border-opacity-50"
+          role="menuItem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-0"
+        >
+          Sign in
+        </.link>
+        <.link
+          href={~p"/users/register"}
+          class="menu-item"
+          role="menuItem"
+          tabindex="-1"
+          method="get"
+          id="user-menu-item-1"
+        >
+          Register
+        </.link>
+      <% end %>
+    </div>
+  </div>
+</header>
+
+<main>
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
+</main>
+
+<footer class="h-[120px] w-full flex justify-center text-white px-16 py-20 font-brand font-regular text-xs">
+  <div class="w-full px-10 ">
+    <div class="border-t-[1px] border-white w-full"></div>
+    <div class="flex items-center space-x-2 py-6">
+      <img
+        src="https://avatars.githubusercontent.com/u/11173117?v=4"
+        alt="LeaderSoft logo"
+        class="h-8 w-8"
+      />
+      <p>© 2023 LeaderSoft</p>
+      <div class="text-emLavender-dark px-4 space-x-2">
+        <a href={~p"/"} class="hover:underline">Terms</a>
+        <a href={~p"/"} class="hover:underline">Privacy</a>
+        <a href={~p"/"} class="hover:underline">About</a>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,171 @@
+<div class="em_gradient flex items-center justify-center">
+  <h1 class="font-brand font-bold text-3xl text-white">Έσοδα</h1>
+</div>
+
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 ml-4 mr-4 mb-4 bg-gray-400">
+  <nav class="flex items-center justify-between p-6 pb-2" aria-label="Table navigation">
+    <span class="text-sm font-normal text-gray-500 dark:text-gray-100">
+      Select year to display
+    </span>
+    <ul class="inline-flex -space-x-px text-sm h-8">
+      <li>
+        <a href="#" class="pager-button rounded-l-lg">
+          Previous
+        </a>
+      </li>
+      <li :for={pager_item <- @pager}>
+        <a
+          href="#"
+          class={is_selected_year(pager_item, @selected_year)}
+          phx-click="fetch-year"
+          phx-value-year={pager_item}
+        >
+          <%= pager_item %>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="pager-button rounded-r-lg">
+          Next
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4 ">
+    <thead class="text-xs text-gray-700  bg-emDark dark:bg-emDark dark:text-gray-400 ">
+      <tr>
+        <th scope="col" class="px-2 pt-4 ">
+          Ημερομηνία
+        </th>
+        <th scope="col" class="px-3 pt-4">
+          Κατηγορία
+        </th>
+        <th scope="col" class="px-3 pt-4">
+          Παραστατικό
+        </th>
+        <th scope="col" class="px-3 pt-4">
+          Περιγραφή
+        </th>
+        <th scope="col" class="px-3 pt-4">
+          Καθαρό
+        </th>
+        <th scope="col" class="px-6 p-3">
+          <div class="w-full">
+            <div class="w-full text-center pr-5">Φ.Π.Α.</div>
+            <div class="flex justify-between ">
+              <span>%</span>
+              <span>Ποσό</span>
+            </div>
+          </div>
+        </th>
+        <th scope="col" class="px-3 pt-4">
+          Σύνολο
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody phx-update="stream" id="asssa" class="h-full max-h-20">
+      <!--        			 466,00 € 	18%	 83,88 € -->
+      <tr
+        :for={{id, row} <- @streams.income_data}
+        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 "
+        id={id}
+      >
+        <td class="w-2 p-2 text-center">
+          <%= Timex.format!(row.transaction_date, "{0D}/{0M}/{YYYY}") %>
+        </td>
+        <td class="px-3 py-2">
+          <%= row.sales_category %>
+        </td>
+        <td class="flex px-3 py-2 justify-between">
+          <span><%= row.invoice_type %></span>
+          <span><%= row.invoice_number %></span>
+        </td>
+        <th
+          scope="row"
+          class="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        >
+          <%= row.description %>
+        </th>
+        <td class="px-3 py-2 text-right">
+          <%= row.net_amount %> €
+        </td>
+        <td class="px-3 py-2 flex justify-between ">
+          <span class="pt-2 font-semibold "><%= row.vat_rate %>%</span>
+
+          <span class="pt-2 text-right"><%= row.vat_amount %>€</span>
+        </td>
+        <td class="px-3 py-2 text-right">
+          <%= row.gross_amount %> €
+        </td>
+        <td class="px-3 py-2">
+          <.link
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+            patch={~p"/income/#{row.id}/edit"}
+            tooltip="edit"
+          >
+            <svg
+              class="w-4 h-4 text-gray-800 dark:text-white"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 21 21"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7.418 17.861 1 20l2.139-6.418m4.279 4.279 10.7-10.7a3.027 3.027 0 0 0-2.14-5.165c-.802 0-1.571.319-2.139.886l-10.7 10.7m4.279 4.279-4.279-4.279m2.139 2.14 7.844-7.844m-1.426-2.853 4.279 4.279"
+              />
+            </svg>
+          </.link>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="mb-4">
+    <div class="flex justify-end text-center text-emPurple-dark font-semibold">
+      <div class="w-32  border-b mr-2">Καθαρό</div>
+      <div class="w-32  border-b mr-2">Φ.Π.Α.</div>
+      <div class="w-32  border-b mr-2">Σύνολο</div>
+    </div>
+
+    <div :for={total <- @totals} class="pt-1">
+      <div class="flex justify-end text-right pr-2 ">
+        <div class="text-emPurple-dark"><%= total.category %>:</div>
+        <div class="w-32 mr-2"><%= total.net_amount %> €</div>
+        <div class="w-32 mr-2"><%= total.vat_amount %> €</div>
+        <div class="w-32 mr-2"><%= total.gross_amount %> €</div>
+      </div>
+    </div>
+    <div class="flex justify-end text-right text-emPurple-dark font-semibold pr-2 pt-1">
+      <div class="text-emPurple-dark">Γενικό Σύνολο :</div>
+      <div class="w-32 border-t-2 mr-2">
+          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.net_amount.amount)) * 0.01) %> €
+      </div>
+      <div class="w-32 border-t-2 mr-2">
+          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.vat_amount.amount)) * 0.01) %> €
+      </div>
+      <div class="w-32 border-t-2 mr-2">
+          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.gross_amount.amount)) * 0.01) %> €
+      </div>
+    </div>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="transaction-modal"
+  show
+  on_cancel={JS.navigate(~p"/income")}
+>
+  <.live_component
+    module={AccountantWeb.IncomeLive.FormTransaction}
+    id={@transaction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    transaction={@transaction}
+    patch={~p"/income"}
+  />
+</.modal>

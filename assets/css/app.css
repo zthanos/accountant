@@ -72,3 +72,16 @@
 .pager-button-selected{
     @apply flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white 
 }
+
+.pager-button-start{
+    @apply pager-button rounded-l-lg
+}
+
+.pager-button-end{
+    @apply pager-button rounded-r-lg
+}
+
+.pagination-nav{
+    @apply flex items-center justify-between p-2 
+}
+

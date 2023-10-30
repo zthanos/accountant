@@ -54,9 +54,9 @@ defmodule Accountant.Context.Income.Income do
     end)
   end
 
-  def create_transaction(attr \\ %{}) do
-    {:ok, %{}}
-  end
+  # def create_transaction(attr \\ %{}) do
+  #   {:ok, %{}}
+  # end
 
   def get_transaction(id) do
     {:ok, data} = get_income()

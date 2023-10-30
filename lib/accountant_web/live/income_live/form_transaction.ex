@@ -29,7 +29,7 @@ defmodule AccountantWeb.IncomeLive.FormTransaction do
           <.input field={@form[:gross_amount]} type="text" label="Σύνολο: " />
         </div>
         <:actions>
-          <.button  phx-disable-with="Saving...">Αποθήκευση</.button>
+          <.button phx-disable-with="Saving...">Αποθήκευση</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -59,7 +59,7 @@ defmodule AccountantWeb.IncomeLive.FormTransaction do
 
   def handle_event("save", %{"transaction_compose_form" => params}, socket) do
     with {:ok, validated_params} <- validate_params(params),
-         {:ok, transaction} <-
+         {:ok, _transaction} <-
            Accountant.Context.Income.Income.create_transaction(validated_params) do
       {:noreply, push_redirect(socket, to: ~p"/income/")}
     else

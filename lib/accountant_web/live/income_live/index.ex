@@ -10,9 +10,7 @@ defmodule AccountantWeb.IncomeLive.Index do
       |> Income.get_years()
 
     selected_year = List.first(data)
-
-    period_data = income_data_by_year(selected_year)
-    totals = Income.get_totals(period_data)
+    {period_data, _total, totals} = get_year(selected_year)
 
     new_socket =
       socket
@@ -42,8 +40,8 @@ defmodule AccountantWeb.IncomeLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => transaction_id}) do
+    {:ok, transaction} = Income.get_transaction(transaction_id)
 
-    {:ok, transaction} =  Income.get_transaction(transaction_id)
     socket
     |> assign(:page_title, "´Εσοδα")
     |> assign(:transaction, transaction)
@@ -57,8 +55,7 @@ defmodule AccountantWeb.IncomeLive.Index do
 
   @impl true
   def handle_event("fetch-year", %{"year" => year}, socket) do
-    items = income_data_by_year(String.to_integer(year))
-    totals = Income.get_totals(items)
+    {items, _total, totals} = get_year(year)
 
     new_socket =
       socket
@@ -66,6 +63,21 @@ defmodule AccountantWeb.IncomeLive.Index do
       |> insert_all(items)
       |> assign(:totals, totals)
       |> assign(:selected_year, String.to_integer(year))
+
+    {:noreply, new_socket}
+  end
+
+  @impl true
+  def handle_info({AccountantWeb.Components.Pagination, {:load_page, page}}, socket) do
+    year = Enum.at(socket.assigns.pager, page)
+    {items, _total, totals} = get_year(year)
+
+    new_socket =
+      socket
+      |> delete_all(income_data_list())
+      |> insert_all(items)
+      |> assign(:totals, totals)
+      |> assign(:selected_year, year)
 
     {:noreply, new_socket}
   end
@@ -104,6 +116,9 @@ defmodule AccountantWeb.IncomeLive.Index do
     end
   end
 
+  defp get_year(year) do
+    Accountant.Context.Transactions.IncomeTransactions.list_transactions(year)
+  end
   defp income_data_by_year(year) do
     Enum.filter(income_data_list(), fn x -> x.transaction_date.year == year end)
   end

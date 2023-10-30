@@ -54,7 +54,8 @@ defmodule Accountant.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:decimal, "~> 2.0"},
       {:money, "~> 1.12"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:exconstructor, "~> 1.2.9"}
     ]
   end
 

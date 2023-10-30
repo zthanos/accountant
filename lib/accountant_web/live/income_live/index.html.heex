@@ -2,34 +2,18 @@
   <h1 class="font-brand font-bold text-3xl text-white">Έσοδα</h1>
 </div>
 
+
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-2 ml-4 mr-4 mb-4 bg-gray-400">
-  <nav class="flex items-center justify-between p-6 pb-2" aria-label="Table navigation">
-    <span class="text-sm font-normal text-gray-500 dark:text-gray-100">
+  <div class="flex items-center justify-between pl-6 items-center" aria-label="Table navigation">
+      <span class="text-sm font-normal text-gray-500 dark:text-gray-100">
       Select year to display
     </span>
-    <ul class="inline-flex -space-x-px text-sm h-8">
-      <li>
-        <a href="#" class="pager-button rounded-l-lg">
-          Previous
-        </a>
-      </li>
-      <li :for={pager_item <- @pager}>
-        <a
-          href="#"
-          class={is_selected_year(pager_item, @selected_year)}
-          phx-click="fetch-year"
-          phx-value-year={pager_item}
-        >
-          <%= pager_item %>
-        </a>
-      </li>
-      <li>
-        <a href="#" class="pager-button rounded-r-lg">
-          Next
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <.live_component
+  module={AccountantWeb.Components.Pagination}
+  id="pagination"
+  pages={@pager}
+/>
+  </div>
 
   <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 mb-4 ">
     <thead class="text-xs text-gray-700  bg-emDark dark:bg-emDark dark:text-gray-400 ">
@@ -133,22 +117,22 @@
 
     <div :for={total <- @totals} class="pt-1">
       <div class="flex justify-end text-right pr-2 ">
-        <div class="text-emPurple-dark"><%= total.category %>:</div>
-        <div class="w-32 mr-2"><%= total.net_amount %> €</div>
-        <div class="w-32 mr-2"><%= total.vat_amount %> €</div>
-        <div class="w-32 mr-2"><%= total.gross_amount %> €</div>
+        <div class="text-emPurple-dark"><%= total.sales_category %>:</div>
+        <div class="w-32 mr-2"><%= total.net_total %> €</div>
+        <div class="w-32 mr-2"><%= total.vat_total %> €</div>
+        <div class="w-32 mr-2"><%= total.gross_total %> €</div>
       </div>
     </div>
     <div class="flex justify-end text-right text-emPurple-dark font-semibold pr-2 pt-1">
       <div class="text-emPurple-dark">Γενικό Σύνολο :</div>
       <div class="w-32 border-t-2 mr-2">
-          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.net_amount.amount)) * 0.01) %> €
+        <%= Enum.sum(Enum.map(@totals, & Decimal.to_float(&1.net_total))) %> €
       </div>
       <div class="w-32 border-t-2 mr-2">
-          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.vat_amount.amount)) * 0.01) %> €
+        <%=  Enum.sum(Enum.map(@totals, & Decimal.to_float(&1.vat_total))) %> €
       </div>
       <div class="w-32 border-t-2 mr-2">
-          <%= Money.parse!(Enum.sum(Enum.map(@totals, & &1.gross_amount.amount)) * 0.01) %> €
+        <%=  Enum.sum(Enum.map(@totals, & Decimal.to_float(&1.gross_total))) %> €
       </div>
     </div>
   </div>

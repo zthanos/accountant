@@ -1,0 +1,99 @@
+<div>
+  <div class="flex w-40 justify-between  rounded-md border border-gray-300 bg-white shadow-sm
+  focus:ring-1 focus:border focus:border-yellow-400 p-1
+  hover:ring-1 hover:border hover:border-zync-400  sm:text-sm">
+    <input
+      id="dater"
+      type="text"
+      class="w-full border-0 transparent  focus:ring-0 "
+      placeholder="dd/MM/yyyy"
+      value={Calendar.strftime(@selected_date, "%d-%m-%y ")}
+    />
+    <button id="calendar-trigger" class=" pr-4 " popovertarget="calendar">
+      <svg
+        class="w-auto h-4 text-gray-800 dark:text-black "
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+      >
+        <path
+          fill="currentColor"
+          d="M6 1a1 1 0 0 0-2 0h2ZM4 4a1 1 0 0 0 2 0H4Zm7-3a1 1 0 1 0-2 0h2ZM9 4a1 1 0 1 0 2 0H9Zm7-3a1 1 0 1 0-2 0h2Zm-2 3a1 1 0 1 0 2 0h-2ZM1 6a1 1 0 0 0 0 2V6Zm18 2a1 1 0 1 0 0-2v2ZM5 11v-1H4v1h1Zm0 .01H4v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM10 11v-1H9v1h1Zm0 .01H9v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM10 15v-1H9v1h1Zm0 .01H9v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM15 15v-1h-1v1h1Zm0 .01h-1v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM15 11v-1h-1v1h1Zm0 .01h-1v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM5 15v-1H4v1h1Zm0 .01H4v1h1v-1Zm.01 0v1h1v-1h-1Zm0-.01h1v-1h-1v1ZM2 4h16V2H2v2Zm16 0h2a2 2 0 0 0-2-2v2Zm0 0v14h2V4h-2Zm0 14v2a2 2 0 0 0 2-2h-2Zm0 0H2v2h16v-2ZM2 18H0a2 2 0 0 0 2 2v-2Zm0 0V4H0v14h2ZM2 4V2a2 2 0 0 0-2 2h2Zm2-3v3h2V1H4Zm5 0v3h2V1H9Zm5 0v3h2V1h-2ZM1 8h18V6H1v2Zm3 3v.01h2V11H4Zm1 1.01h.01v-2H5v2Zm1.01-1V11h-2v.01h2Zm-1-1.01H5v2h.01v-2ZM9 11v.01h2V11H9Zm1 1.01h.01v-2H10v2Zm1.01-1V11h-2v.01h2Zm-1-1.01H10v2h.01v-2ZM9 15v.01h2V15H9Zm1 1.01h.01v-2H10v2Zm1.01-1V15h-2v.01h2Zm-1-1.01H10v2h.01v-2ZM14 15v.01h2V15h-2Zm1 1.01h.01v-2H15v2Zm1.01-1V15h-2v.01h2Zm-1-1.01H15v2h.01v-2ZM14 11v.01h2V11h-2Zm1 1.01h.01v-2H15v2Zm1.01-1V11h-2v.01h2Zm-1-1.01H15v2h.01v-2ZM4 15v.01h2V15H4Zm1 1.01h.01v-2H5v2Zm1.01-1V15h-2v.01h2Zm-1-1.01H5v2h.01v-2Z"
+        />
+      </svg>
+    </button>
+  </div>
+  <div
+    class="card bg-white w-52 shadow-sm mt-1 pt-2 space-y-2"
+    id="calendar"
+    popover
+    anchor="dater"
+  >
+    <div class="flex justify-between w-46">
+      <h3 class="font-bold text-xs p-2 "><%= @month_name %> <%= @selected_date.year %></h3>
+      <div class="flex">
+        <a href="#" phx-target={@myself} phx-click="prev_month">
+          <svg
+            class="w-6 h-6 p-1 text-gray-800 dark:text-slate-400 hover:text-black"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13V1m0 0L1 5m4-4 4 4"
+            />
+          </svg>
+        </a>
+        <a href="#" phx-target={@myself} phx-click="next_month">
+          <svg
+            class="w-6 h-6 p-1 text-gray-800 dark:text-slate-400 hover:text-black"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 10 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 1v12m0 0 4-4m-4 4L1 9"
+            />
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="grid grid-cols-7  text-center text-xs">
+      <.link :for={{descr, idx} <- Enum.with_index(@week_names)} class={is_weekend(idx)}>
+        <%= descr %>
+      </.link>
+
+      <a :for={x <- @prefix} class="hover:bg-blue-300 text-xs m-1 text-gray-400" href="#">
+        <%= x %>
+      </a>
+
+      <.link
+        :for={x <- @month}
+        class={is_selected_date(@selected_date, x)}
+        phx-target={@myself}
+        phx-click="date_selected"
+        phx-value-date={x}
+      >
+        <%= x %>
+      </.link>
+      <a :for={x <- @suffix} class="hover:bg-blue-300 text-xs m-1 text-gray-400" href="#">
+        <%= x %>
+      </a>
+    </div>
+    <div class="flex justify-between pl-6 pr-6 pb-2 font-semibold text-xs text-blue-600">
+      <.link class="">Clear</.link>
+      <.link class="">Today</.link>
+    </div>
+  </div>
+</div>

@@ -20,7 +20,9 @@ defmodule AccountantWeb.Components.Pagination do
         visible_idx,
         socket.assigns.visible_btns
       )
+
     notify_parent({:load_page, selected_idx})
+
     socket
     |> assign(:selected_idx, selected_idx)
     |> assign(:visible_btns, visible_btns)
@@ -31,39 +33,63 @@ defmodule AccountantWeb.Components.Pagination do
 
   @impl true
   def update(assigns, socket) do
-
-    {:ok, apply_changes(socket, socket.assigns.visible_idx, socket.assigns.selected_idx, socket.assigns.visible_btns, assigns.pages)}
+    {:ok,
+     apply_changes(
+       socket,
+       socket.assigns.visible_idx,
+       socket.assigns.selected_idx,
+       socket.assigns.visible_btns,
+       assigns.pages
+     )}
   end
 
   @impl true
   def handle_event("select_page", %{"page" => selected_page}, socket) do
-
-
-    {:noreply, apply_changes(socket, socket.assigns.visible_idx, String.to_integer(selected_page), socket.assigns.visible_btns, socket.assigns.pages)}
-
+    {:noreply,
+     apply_changes(
+       socket,
+       socket.assigns.visible_idx,
+       String.to_integer(selected_page),
+       socket.assigns.visible_btns,
+       socket.assigns.pages
+     )}
   end
 
   @impl true
   def handle_event("select_prev", _assigns, socket) do
-    new_idx = case socket.assigns.visible_idx - 1 do
-      x when x < 0 -> 0
-      x -> x
-    end
+    new_idx =
+      case socket.assigns.visible_idx - 1 do
+        x when x < 0 -> 0
+        x -> x
+      end
 
-    {:noreply, apply_changes(socket, new_idx, socket.assigns.selected_idx, socket.assigns.visible_btns, socket.assigns.pages)}
-
-
+    {:noreply,
+     apply_changes(
+       socket,
+       new_idx,
+       socket.assigns.selected_idx,
+       socket.assigns.visible_btns,
+       socket.assigns.pages
+     )}
   end
 
   def handle_event("select_next", _assigns, socket) do
     last_idx = Enum.count(socket.assigns.pages)
 
-    new_idx = case socket.assigns.visible_idx + 1 do
-      x when x > last_idx -> last_idx
-      x -> x
-    end
-    {:noreply, apply_changes(socket, new_idx, socket.assigns.selected_idx, socket.assigns.visible_btns, socket.assigns.pages)}
+    new_idx =
+      case socket.assigns.visible_idx + 1 do
+        x when x > last_idx -> last_idx
+        x -> x
+      end
 
+    {:noreply,
+     apply_changes(
+       socket,
+       new_idx,
+       socket.assigns.selected_idx,
+       socket.assigns.visible_btns,
+       socket.assigns.pages
+     )}
   end
 
   defp is_selected_page(page, selected_page) do
@@ -75,5 +101,4 @@ defmodule AccountantWeb.Components.Pagination do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
 end

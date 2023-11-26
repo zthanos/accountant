@@ -18,15 +18,78 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+let Hooks = {};
+
+
+Hooks.GreekDatesInput = {
+    mounted() {
+
+        this.formatDate(this.el)
+
+        this.el.addEventListener("change", () => {
+            
+            console.log("change", this.el.id)
+
+            this.formatDate(this.el)
+        })
+
+        this.el.addEventListener("beforeinput", (event) => {
+            console.log("before", this.el.id)
+            
+        });
+    },
+
+    formatDate(el) {
+        console.log(el.id)
+        // Get the "data-date-format" attribute value
+        const dateFormat = el.getAttribute('data-date-format');
+        console.info(moment(el.value, 'YYYY-MM-DD'))
+        // Parse the input value using moment.js and format it according to the data-date-format
+        const formattedDate = moment(el.value, 'YYYY-MM-DD').format(dateFormat);
+
+        // Set the "data-date" attribute to the formatted date
+        el.setAttribute('data-date', formattedDate);
+
+    }
+
+}
+
+Hooks.UpdateLineNumbers = {
+    mounted() {
+        const lineNumberText = document.querySelector("#line-numbers")
+
+        this.el.addEventListener("input", () => {
+            this.updateLineNumbers();
+        })
+
+        this.el.addEventListener("scroll", () => {
+            lineNumberText.scrollTop = this.el.scrollTop;
+        })
+
+        this.handleEvent("clear-textareas", () => {
+            this.el.value = "";
+            lineNumberText.value = "1\n"
+        })
+        this.updateLineNumbers();
+    },
+
+    updateLineNumbers() {
+        const lineNumberText = document.querySelector("#line-numbers")
+        if (!lineNumberText) return;
+        const lines = this.el.value.split("\n")
+        const numbers = lines.map((_, index) => index + 1).join("\n") + "\n"
+        lineNumberText.value = numbers;
+    }
+};
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+let liveSocket = new LiveSocket("/live", Socket, { params: { _csrf_token: csrfToken }, hooks: Hooks })
 
 // Show progress bar on live navigation and form submits
-topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
+topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" })
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 

@@ -1,6 +1,7 @@
 defmodule AccountantWeb.IncomeLive.FormTransaction do
   use AccountantWeb, :live_component
   alias AccountantWeb.IncomeLive.TransactionComposeForm
+  import AccountantWeb.DateComponents
 
   @impl true
   def render(assigns) do
@@ -14,7 +15,11 @@ defmodule AccountantWeb.IncomeLive.FormTransaction do
         phx-target={@myself}
       >
         <div class="flex justify-between">
-          <.input field={@form[:transaction_date]} type="date" label="Ημερομηνία: " />
+          <.locale_datetime_input
+            field={@form[:transaction_date]}
+            type="datetime-local"
+            label="Ημερομηνία: "
+          />
         </div>
         <div class="flex justify-between space-x-2">
           <.input field={@form[:sales_category]} type="text" label="Κατηγορία: " />
@@ -32,10 +37,21 @@ defmodule AccountantWeb.IncomeLive.FormTransaction do
           <.button phx-disable-with="Saving...">Αποθήκευση</.button>
         </:actions>
       </.simple_form>
+      <input
+        type="date"
+        class="greeki-date-input"
+        value="2004-16-11"
+        id="greek-date"
+        data-date=""
+        data-date-format="DD/MM/YYYY"
+        phx-hook="GreekDatesInput"
+      />
     </div>
     """
   end
 
+  # <input type="date" class="greek-date-input" id="greek-date" data-date="" data-date-format="DD/MM/YYYY"
+  # phx-hook="GreekDatesInput"  />
   @impl true
   def update(%{transaction: transaction}, socket) do
     form =

@@ -44,6 +44,4 @@ defmodule Accountant.Context.Transactions.Transaction do
     |> cast(attrs, all_fields())
     |> validate_required(@required_fields)
   end
-
-
 end

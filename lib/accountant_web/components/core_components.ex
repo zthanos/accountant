@@ -365,6 +365,8 @@ defmodule AccountantWeb.CoreComponents do
     """
   end
 
+  # Handle conversion from "dd/mm/yyyy" to a format compatible with your application
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""

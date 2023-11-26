@@ -33,12 +33,13 @@ module.exports = {
       }
     },
     fontFamily: {
-      brand: ["Greek", "sans-serif"]
+      brand: ["CitrixSans", "sans-serif"]
     },
     fontWeight: {
       regular: "normal",
       bold: "bold"
     }
+   
   },
   plugins: [
     require("@tailwindcss/forms"),

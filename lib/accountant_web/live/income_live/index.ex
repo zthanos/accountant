@@ -2,6 +2,7 @@ defmodule AccountantWeb.IncomeLive.Index do
   use AccountantWeb, :live_view
   alias AccountantWeb.IncomeLive.TransactionComposeForm
   alias Accountant.Context.Income.Income
+  alias Accountant.Context.Transactions.IncomeTransactions
 
   @impl true
   def mount(_params, _session, socket) do
@@ -40,11 +41,12 @@ defmodule AccountantWeb.IncomeLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => transaction_id}) do
-    {:ok, transaction} = Income.get_transaction(transaction_id)
+    transaction = IncomeTransactions.get_transaction(transaction_id)
+    transaction.transaction_date |> dbg()
 
     socket
     |> assign(:page_title, "´Εσοδα")
-    |> assign(:transaction, transaction)
+    |> assign(:transaction, Map.from_struct(transaction))
   end
 
   @impl true
@@ -119,6 +121,7 @@ defmodule AccountantWeb.IncomeLive.Index do
   defp get_year(year) do
     Accountant.Context.Transactions.IncomeTransactions.list_transactions(year)
   end
+
   defp income_data_by_year(year) do
     Enum.filter(income_data_list(), fn x -> x.transaction_date.year == year end)
   end

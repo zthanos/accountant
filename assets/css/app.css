@@ -19,6 +19,20 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "CitrixSans";
+    src: url("/fonts/citrixsans-regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "CitrixSans";
+    src: url("/fonts/citrixsans-bold.ttf");
+    font-weight: bold;
+    font-style: normal;
+}
+
 .em_gradient{
     background-image: linear-gradient(to top, #e7e5e5, #c8c7c7, #6e6e6e, #4a4646);
     height: 225px;
@@ -85,3 +99,108 @@
     @apply flex items-center justify-between p-2 
 }
 
+/* Apply styles to the ::before pseudo-element */
+
+
+
+.greek-date-input {
+    /* @apply relative text-white text-sm h-8 border rounded-lg w-32 */
+    
+    position: relative;
+    width: 150px; height: 20px;
+    color: white;
+}
+
+.greek-date-input:before {
+    position: absolute;
+    content: attr(data-date);
+    display: inline-block;
+    color: black;
+    padding-left: 14px;
+}
+
+.greek-date-input::-webkit-datetime-edit{
+    display: contents;
+
+} 
+.greek-date-input::-webkit-inner-spin-button, 
+.greek-date-input::-webkit-clear-button {
+    display: none;
+}
+
+.greek-date-input::-webkit-calendar-picker-indicator {
+    @apply absolute top-1 right-1 text-black opacity-70
+    
+
+}
+
+
+[popover] {
+    inset: unset;
+
+}
+
+@position-fallback --aligned {
+    @try {
+        top: anchor(top);
+        left: anchor(right);
+    }
+
+    @try {
+        top: anchor(bottom);
+        left: anchor(right);
+    }
+
+    @try {
+        top: anchor(top);
+        right: anchor(left);
+    }
+
+    @try {
+        bottom: anchor(bottom);
+        left: anchor(right);
+    }
+
+    @try {
+        right: anchor(left);
+        bottom: anchor(bottom);
+    }
+}
+
+@position-fallback --flip {
+    @try {
+        bottom: anchor(top);
+        left: anchor(left);
+    }
+
+    @try {
+        right: anchor(right);
+        bottom: anchor(top);
+    }
+
+    @try {
+        top: anchor(bottom);
+        left: anchor(left);
+    }
+
+    @try {
+        top: anchor(bottom);
+        right: anchor(right);
+    }
+}
+
+
+[popovertarget="calendar"] {
+    anchor-name: --calendar;
+}
+
+/* #context {
+    anchor-default: --calendar;
+    position-fallback: --aligned;
+} */
+
+#calendar {
+    anchor-name: --calendar;
+    anchor-default: --calendar;
+    position-fallback: --flip;
+  }

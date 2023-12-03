@@ -1,15 +1,15 @@
-<div>
-  <div class="flex w-40 justify-between  rounded-md border border-gray-300 bg-white shadow-sm
+<div id={@data.anchor_id} class="date-picker-container"  anchor-name: --date-container>
+  <div class="flex w-full justify-between  rounded-md border border-gray-300 bg-white shadow-sm
   focus:ring-1 focus:border focus:border-yellow-400 p-1
   hover:ring-1 hover:border hover:border-zync-400  sm:text-sm">
     <input
-      id="dater"
+
       type="text"
       class="w-full border-0 transparent  focus:ring-0 "
       placeholder="dd/MM/yyyy"
-      value={Calendar.strftime(@selected_date, "%d-%m-%y ")}
+      value={Calendar.strftime(@data.selected_date, "%d/%m/%Y ")}
     />
-    <button id="calendar-trigger" class=" pr-4 " popovertarget="calendar">
+    <button class=" pr-4 " popovertarget={@data.popover_id} popovertargetaction="show">
       <svg
         class="w-auto h-4 text-gray-800 dark:text-black "
         aria-hidden="true"
@@ -25,13 +25,14 @@
     </button>
   </div>
   <div
-    class="card bg-white w-52 shadow-sm mt-1 pt-2 space-y-2"
-    id="calendar"
-    popover
-    anchor="dater"
+    class="card bg-white w-52 shadow-sm mt-1 pt-2 space-y-2 calendar"
+    id={@data.popover_id}
+
+    popover="auto"
+    anchor={@data.anchor_id}
   >
     <div class="flex justify-between w-46">
-      <h3 class="font-bold text-xs p-2 "><%= @month_name %> <%= @selected_date.year %></h3>
+      <h3 class="font-bold text-xs p-2 "><%= @data.month_name %> <%= @data.selected_date.year %></h3>
       <div class="flex">
         <a href="#" phx-target={@myself} phx-click="prev_month">
           <svg
@@ -70,26 +71,19 @@
       </div>
     </div>
     <div class="grid grid-cols-7  text-center text-xs">
-      <.link :for={{descr, idx} <- Enum.with_index(@week_names)} class={is_weekend(idx)}>
+      <.link :for={{descr, idx} <- Enum.with_index(@data.week_names)} class={is_weekend(idx)}>
         <%= descr %>
       </.link>
 
-      <a :for={x <- @prefix} class="hover:bg-blue-300 text-xs m-1 text-gray-400" href="#">
-        <%= x %>
-      </a>
-
-      <.link
-        :for={x <- @month}
-        class={is_selected_date(@selected_date, x)}
+      <button popovertarget={@data.popover_id} popovertargetaction="hide"
         phx-target={@myself}
         phx-click="date_selected"
-        phx-value-date={x}
-      >
-        <%= x %>
-      </.link>
-      <a :for={x <- @suffix} class="hover:bg-blue-300 text-xs m-1 text-gray-400" href="#">
-        <%= x %>
-      </a>
+        phx-value-date={x.day}
+        :for={x <- @data.dates} class={format_date(x)} href="#">
+        <%= x.day.day %>
+
+      </button>
+
     </div>
     <div class="flex justify-between pl-6 pr-6 pb-2 font-semibold text-xs text-blue-600">
       <.link class="">Clear</.link>

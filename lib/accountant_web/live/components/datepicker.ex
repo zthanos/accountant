@@ -1,114 +1,48 @@
 defmodule AccountantWeb.Components.Datepicker do
   use Phoenix.LiveComponent
+  alias AccountantWeb.Components.DateGridView
 
   defmodule DatepickerStruct do
     use ExConstructor
     defstruct ~w[date prefix month suffix description]a
   end
 
-  @max_display_days 6 * 7
-  @month_names [
-    "Ιανουάριος",
-    "Φεβρουάριος",
-    "Μάρτιος",
-    "Απρίος",
-    "Μαιος",
-    "Ιούνιος",
-    "Ιούλιος",
-    "Αύγουστος",
-    "Σεμπτέμβριος",
-    "Οκτώβριος",
-    "Νοέμβριος",
-    "Δεκέμβριος"
-  ]
-  @week_days ["Δε", "Τρ", "Τε", "Πε", "Πα", "Σα", "Κυ"]
 
   @impl true
-  def mount(socket) do
-    # max_display_days = 35
-    # Date.new!(2023, 10, 12, Calendar.ISO)
-    date =
-      Date.utc_today()
-
-    date_grid = get_month_grid!(date)
-    date_grid |> dbg()
-    {:ok, apply_changes(socket, date_grid)}
+  def update(assigns, socket) do
+    date_grid = DateGridView.new(assigns.id, Date.utc_today() )
+    {:ok, socket |> assign(:data, date_grid)}
   end
 
   @impl true
   def handle_event("prev_month", _assigns, socket) do
-    date = Timex.shift(socket.assigns.selected_date, months: -1)
-    date_grid = get_month_grid!(date)
-
-    {:noreply, apply_changes(socket, date_grid)}
+    date_grid = DateGridView.shift_month(socket.assigns.data, -1)
+   {:noreply, socket |> assign(:data, date_grid)}
   end
 
   def handle_event("next_month", _params, socket) do
-    date = Timex.shift(socket.assigns.selected_date, months: 1)
-    date_grid = get_month_grid!(date)
-
-    {:noreply, apply_changes(socket, date_grid)}
+    date_grid = DateGridView.shift_month(socket.assigns.data, 1)
+    {:noreply, socket |> assign(:data, date_grid)}
   end
 
   def handle_event("date_selected", %{"date" => date}, socket) do
-    selected =
-      Date.new!(
-        socket.assigns.current_year,
-        socket.assigns.current_month,
-        String.to_integer(date),
-        Calendar.ISO
-      )
-
-    selected |> dbg()
-
-    date_grid = get_month_grid!(selected)
-
-    {:noreply, apply_changes(socket, date_grid)}
+    date_grid = DateGridView.select_date(socket.assigns.data, NaiveDateTime.from_iso8601!(date))
+    date_grid |> dbg()
+    {:noreply, socket |> assign(:data, date_grid)}
   end
 
-  defp apply_changes(socket, date_grid) do
-    socket
-    |> assign(:selected_date, date_grid.date)
-    |> assign(:prefix, date_grid.prefix)
-    |> assign(:month, date_grid.month)
-    |> assign(:suffix, date_grid.suffix)
-    |> assign(:month_name, date_grid.description)
-    |> assign(:week_names, @week_days)
-    |> assign(:current_month, date_grid.date.month)
-    |> assign(:current_year, date_grid.date.year)
+
+  defp format_date(date) do
+    cond do
+      date.selected -> "hover:bg-blue-300 text-xs text-blue-700 border border-solid"
+      date.current_month -> "hover:bg-blue-300 text-xs text-blue-200"
+      true -> "hover:bg-blue-300 text-xs m-1 text-gray-400"
+    end
   end
-
-  defp get_month_grid!(date) do
-    previous_month = Timex.shift(date, months: -1)
-    days_in_month = Date.days_in_month(date)
-    first_day_of_month = Date.beginning_of_month(date)
-
-    previous_month_days = Date.days_in_month(previous_month)
-    first_day_of_week = Date.day_of_week(first_day_of_month)
-    prefix_days = rem(first_day_of_week + 5, 7)
-    suffix_days = @max_display_days - days_in_month - prefix_days - 1
-
-    data = %{
-      date: date,
-      prefix: Range.new(previous_month_days - prefix_days, previous_month_days),
-      month: Range.new(1, Date.days_in_month(date)),
-      suffix: Range.new(1, suffix_days),
-      description: get_month(date.month)
-    }
-
-    DatepickerStruct.new(data)
-  end
-
-  defp get_month(month) do
-    Enum.at(@month_names, month - 1)
-  end
-
   defp is_selected_date(selected_date, descr) do
-    selected_date.day |> dbg()
-    descr |> dbg()
-
+    # selected_date == descr |> dbg()
     if selected_date == descr do
-      "hover:bg-blue-300 text-xs text-blue-400"
+      "hover:bg-blue-300 text-xs text-blue-700 border border-solid bg-yellow-100"
     else
       "hover:bg-blue-300 text-xs text-blue-200"
     end
@@ -122,5 +56,5 @@ defmodule AccountantWeb.Components.Datepicker do
     end
   end
 
-  # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
 end

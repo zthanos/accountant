@@ -7,17 +7,16 @@ defmodule AccountantWeb.Components.Datepicker do
     defstruct ~w[date prefix month suffix description]a
   end
 
-
   @impl true
   def update(assigns, socket) do
-    date_grid = DateGridView.new(assigns.id, Date.utc_today() )
+    date_grid = DateGridView.new(assigns.id, Date.utc_today())
     {:ok, socket |> assign(:data, date_grid)}
   end
 
   @impl true
   def handle_event("prev_month", _assigns, socket) do
     date_grid = DateGridView.shift_month(socket.assigns.data, -1)
-   {:noreply, socket |> assign(:data, date_grid)}
+    {:noreply, socket |> assign(:data, date_grid)}
   end
 
   def handle_event("next_month", _params, socket) do
@@ -27,24 +26,19 @@ defmodule AccountantWeb.Components.Datepicker do
 
   def handle_event("date_selected", %{"date" => date}, socket) do
     date_grid = DateGridView.select_date(socket.assigns.data, NaiveDateTime.from_iso8601!(date))
-    date_grid |> dbg()
     {:noreply, socket |> assign(:data, date_grid)}
   end
 
+  def handle_event("current_date_selected", _params, socket) do
+    date_grid = DateGridView.select_date(socket.assigns.data, NaiveDateTime.utc_now(:second))
+    {:noreply, socket |> assign(:data, date_grid)}
+  end
 
   defp format_date(date) do
     cond do
       date.selected -> "hover:bg-blue-300 text-xs text-blue-700 border border-solid"
       date.current_month -> "hover:bg-blue-300 text-xs text-blue-200"
       true -> "hover:bg-blue-300 text-xs m-1 text-gray-400"
-    end
-  end
-  defp is_selected_date(selected_date, descr) do
-    # selected_date == descr |> dbg()
-    if selected_date == descr do
-      "hover:bg-blue-300 text-xs text-blue-700 border border-solid bg-yellow-100"
-    else
-      "hover:bg-blue-300 text-xs text-blue-200"
     end
   end
 
@@ -55,6 +49,4 @@ defmodule AccountantWeb.Components.Datepicker do
       "m-1"
     end
   end
-
-
 end

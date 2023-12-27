@@ -1,4 +1,4 @@
-<div id={@data.anchor_id} class="date-picker-container"  anchor-name: --date-container>
+<div id={@data.anchor_id} class="date-picker-container"  >
   <div class="flex w-full justify-between  rounded-md border border-gray-300 bg-white shadow-sm
   focus:ring-1 focus:border focus:border-yellow-400 p-1
   hover:ring-1 hover:border hover:border-zync-400  sm:text-sm">
@@ -9,9 +9,15 @@
       placeholder="dd/MM/yyyy"
       value={Calendar.strftime(@data.selected_date, "%d/%m/%Y ")}
     />
-    <button class=" pr-4 " popovertarget={@data.popover_id} popovertargetaction="show">
+
+    <button
+      data-popover-target={@data.popover_id}
+      data-popover-trigger="click"
+      type="button"
+      class="text-gray-500 bg-transparent hover:text-blue-500 focus:ring-none focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-gray-600 dark:hover:text-gray-500 dark:focus:ring-gray-500">
+
       <svg
-        class="w-auto h-4 text-gray-800 dark:text-black "
+        class="w-auto h-4"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -24,13 +30,7 @@
       </svg>
     </button>
   </div>
-  <div
-    class="card bg-white w-52 shadow-sm mt-1 pt-2 space-y-2 calendar"
-    id={@data.popover_id}
-
-    popover="auto"
-    anchor={@data.anchor_id}
-  >
+  <div data-popover id={@data.popover_id} role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
     <div class="flex justify-between w-46">
       <h3 class="font-bold text-xs p-2 "><%= @data.month_name %> <%= @data.selected_date.year %></h3>
       <div class="flex">
@@ -75,7 +75,7 @@
         <%= descr %>
       </.link>
 
-      <button popovertarget={@data.popover_id} popovertargetaction="hide"
+      <button popovertarget={@data.popover_id} popoverTargetAction="hide"
         phx-target={@myself}
         phx-click="date_selected"
         phx-value-date={x.day}
@@ -86,8 +86,20 @@
 
     </div>
     <div class="flex justify-between pl-6 pr-6 pb-2 font-semibold text-xs text-blue-600">
-      <.link class="">Clear</.link>
-      <.link class="">Today</.link>
+    <div class="flex justify-between pl-6 pr-6 pb-2 font-semibold text-xs text-blue-600">
+          <button popovertarget={@data.popover_id} popoverTargetAction="hide"
+        phx-target={@myself}
+        phx-click="current_date_selected">
+        Today
+      </button>
+    </div>
+    <div class="flex justify-between pl-6 pr-6 pb-2 font-semibold text-xs text-blue-600">
+          <button popovertarget={@data.popover_id} popoverTargetAction="hide"
+        phx-target={@myself}
+        phx-click="current_date_selected">
+        clear
+      </button>
+    </div>
     </div>
   </div>
 </div>

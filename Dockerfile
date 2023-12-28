@@ -17,6 +17,9 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && apt-get install -
 
 WORKDIR /app
 
+# Set execute permission for entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
 RUN mix deps.get
 RUN npm install --prefix ./assets
 

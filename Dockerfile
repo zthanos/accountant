@@ -25,4 +25,4 @@ RUN npm install --prefix ./assets
 
 EXPOSE 4000
 
-CMD ["/app/entrypoint.sh"]
+CMD ["./entrypoint.sh"]
